@@ -1,0 +1,26 @@
+{
+  "name": "ubsub",
+  "version": "0.1.0",
+  "description": "Quickly and easily integrate with events on ubsub.io",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zix99/ubsub-client.git"
+  },
+  "keywords": [
+    "PubSub",
+    "ubsub",
+    "events",
+    "messaging",
+    "queueing"
+  ],
+  "author": "Chris LaPointe",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/zix99/ubsub-client/issues"
+  },
+  "homepage": "https://github.com/zix99/ubsub-client#readme"
+}
