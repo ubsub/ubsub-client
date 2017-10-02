@@ -13,13 +13,31 @@ events from the public internet to a local network.
 
 # Using
 
-## Installing
+## Installing CLI
 
-Installing into your project;
+To use the `ubsub` CLI on your command line, make sure you have a recent version of [NodeJS](https://nodejs.org/en/) installed, and then run:
+
+```
+npm install -g ubsub
+```
+
+Once installed, you can run `ubsub help` from command line to see help output.
+
+## Installing for App Use
+
+Installing into your project:
 
 ```
 npm install --save ubsub-client
 ```
+
+### Listening to a Topic
+
+TODO
+
+### Forwarding a Topic to an HTTP endpoint
+
+TODO
 
 # License
 
