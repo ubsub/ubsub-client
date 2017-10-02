@@ -1,3 +1,4 @@
 #!/usr/bin/env node
 
-console.log("TBD");
+/* eslint no-console: off */
+console.log('TBD');
