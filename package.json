@@ -4,6 +4,7 @@
   "description": "Quickly and easily integrate with events on ubsub.io",
   "main": "index.js",
   "scripts": {
+    "test": "npm run lint",
     "lint": "eslint ."
   },
   "repository": {
