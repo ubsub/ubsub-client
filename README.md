@@ -1,6 +1,8 @@
 # ubsub-client
 
 [![Build Status](https://travis-ci.org/zix99/ubsub-client.svg?branch=master)](https://travis-ci.org/zix99/ubsub-client)
+[![npm](https://img.shields.io/npm/v/ubsub.svg)](https://www.npmjs.com/package/ubsub)
+[![npm](https://img.shields.io/npm/l/ubsub.svg)](https://www.npmjs.com/package/ubsub)
 
 The ubsub-client is a nodejs module to easily connect to send and receive events from [UbSub](https://ubsub.io) using sockets and https.
 
