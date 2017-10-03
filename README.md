@@ -51,7 +51,7 @@ See [examples/](examples/) for some sample uses.
 ### Listening to a Topic
 
 ```js
-const ubsub = require('../')(<user id>, <user secret>);
+const ubsub = require('ubsub')(<user id>, <user secret>);
 
 ubsub.listen(<topic id>, (event) => {
 	console.log('received event ' + JSON.stringify(event));
@@ -61,7 +61,7 @@ ubsub.listen(<topic id>, (event) => {
 ### Forwarding a Topic to an HTTP endpoint
 
 ```js
-const ubsub = require('../')(<user id>, <user secret>);
+const ubsub = require('ubsub')(<user id>, <user secret>);
 
 ubsub.forward(<topic id>, 'http://localhost:5000', {..optional axios opts..});
 ```
