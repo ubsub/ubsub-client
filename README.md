@@ -17,9 +17,26 @@ To use the `ubsub` CLI on your command line, make sure you have a recent version
 
 ```bash
 npm install -g ubsub
+ubsub login
 ```
 
 Once installed, you can run `ubsub help` from command line to see help output.
+
+### Outputting events to the terminal
+
+```bash
+ubsub listen <topic id>
+```
+
+### Forwarding to an internal URL
+
+One of the great uses is the ability to forward an external event URL to something behind your firewall and/or NAT.
+
+```bash
+ubsub forward <topic id> http://localhost:4000/path/to/it --method POST
+```
+
+This will invoke the endpoint every time the public UbSub URL is hit.
 
 ## Installing for App Use
 
