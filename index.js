@@ -2,6 +2,7 @@
 const io = require('socket.io-client');
 const axios = require('axios');
 const _ = require('lodash');
+const Client = require('./lib/client');
 
 module.exports = (userId, userKey, opts) => {
   const o = opts || {};
@@ -26,5 +27,8 @@ module.exports = (userId, userKey, opts) => {
       });
     },
 
+    getApi() {
+      return Client(userId, userKey);
+    },
   };
 };
