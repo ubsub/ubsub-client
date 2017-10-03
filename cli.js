@@ -103,9 +103,7 @@ const args = yargs
       .describe('method', 'HTTP method to push to url with')
       .default('method', 'POST');
   }, cmdForward)
-  .command('*', '', {}, () => {
-    args.showHelp();
-  })
+  .demandCommand()
   .help('help')
   .alias('help', 'h')
   .env('UBSUB');
