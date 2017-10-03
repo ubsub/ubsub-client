@@ -80,7 +80,7 @@ function cmdForward(args) {
         validateStatus: null,
       }).then(resp => {
         console.error(`  Received ${resp.status}`);
-      })
+      });
     });
 }
 
