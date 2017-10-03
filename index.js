@@ -3,31 +3,28 @@ const io = require('socket.io-client');
 const axios = require('axios');
 const _ = require('lodash');
 
-function UbSubClient(userId, userKey, opts) {
+module.exports = (userId, userKey, opts) => {
   const o = opts || {};
+  const host = o.host || 'https://socket.ubsub.io';
 
-  this._host = o.host || 'https://socket.ubsub.io';
-  this._userId = userId;
-  this._userSecret = userKey;
+  return {
+    listen(topicId, onEvent) {
+      const sock = io(`${host}/socket?userId=${userId}&topicId=${topicId}&userKey=${userKey}`);
+      sock.on('event', onEvent);
+      return sock;
+    },
 
-  this._sockets = {};
-}
+    forward(topicId, forwardUrl, httpOpts) {
+      return this.listen(topicId, data => {
+        axios(_.assign({
+          url: forwardUrl,
+          data,
+          method: 'post', // default, can be overriden in opts
+        }, httpOpts)).catch(err => {
+          console.error(`Error forwarding event from '${topicId} to URL ${forwardUrl}: ${err.message}`);
+        });
+      });
+    },
 
-UbSubClient.prototype.listen = function listen(topicId, onEvent) {
-  const sock = io(`${this._host}/socket?userId=${this._userId}&topicId=${topicId}&userKey=${this._userKey}`);
-  sock.on('event', onEvent);
+  };
 };
-
-UbSubClient.prototype.forward = function forward(topicId, forwardUrl, opts) {
-  this.listen(topicId, data => {
-    axios(_.assign({
-      url: forwardUrl,
-      data,
-      method: 'post', // default, can be overriden in opts
-    }, opts));
-  });
-};
-
-
-module.exports = new UbSubClient();
-module.exports.Client = UbSubClient;

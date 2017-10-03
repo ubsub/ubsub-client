@@ -17,7 +17,7 @@ events from the public internet to a local network.
 
 To use the `ubsub` CLI on your command line, make sure you have a recent version of [NodeJS](https://nodejs.org/en/) installed, and then run:
 
-```
+```bash
 npm install -g ubsub
 ```
 
@@ -27,17 +27,29 @@ Once installed, you can run `ubsub help` from command line to see help output.
 
 Installing into your project:
 
-```
+```bash
 npm install --save ubsub-client
 ```
 
+See [examples/](examples/) for some sample uses.
+
 ### Listening to a Topic
 
-TODO
+```js
+const ubsub = require('../')(<user id>, <user secret>);
+
+ubsub.listen(<topic id>, (event) => {
+	console.log('received event ' + JSON.stringify(event));
+});
+```
 
 ### Forwarding a Topic to an HTTP endpoint
 
-TODO
+```js
+const ubsub = require('../')(<user id>, <user secret>);
+
+ubsub.listen(<topic id>, 'http://localhost:5000', {..optional axios opts..});
+```
 
 # License
 
