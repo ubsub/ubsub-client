@@ -48,7 +48,7 @@ ubsub.listen(<topic id>, (event) => {
 ```js
 const ubsub = require('../')(<user id>, <user secret>);
 
-ubsub.listen(<topic id>, 'http://localhost:5000', {..optional axios opts..});
+ubsub.forward(<topic id>, 'http://localhost:5000', {..optional axios opts..});
 ```
 
 # License
