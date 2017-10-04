@@ -14,6 +14,12 @@ module.exports = (userId, userKey, ubsubOpts) => {
     listen(topicId, onEvent) {
       const sock = io(`${opts.socketHost}/socket?userId=${userId}&topicId=${topicId}&userKey=${userKey}`);
       sock.on('event', onEvent);
+      sock.on('handshake-error', err => {
+        console.error(`Failed to listen to topic ${topicId}: ${err.err}`);
+      });
+      sock.on('disconnect', () => {
+        console.error(`Disconnected topic ${topicId}`);
+      });
       return sock;
     },
 
