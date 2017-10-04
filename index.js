@@ -4,13 +4,15 @@ const axios = require('axios');
 const _ = require('lodash');
 const Client = require('./lib/client');
 
-module.exports = (userId, userKey, opts) => {
-  const o = opts || {};
-  const host = o.host || 'https://socket.ubsub.io';
+module.exports = (userId, userKey, ubsubOpts) => {
+  const opts = _.assign({
+    socketHost: 'https://socket.ubsub.io',
+    routerHost: 'https://router.ubsub.io',
+  }, ubsubOpts);
 
   return {
     listen(topicId, onEvent) {
-      const sock = io(`${host}/socket?userId=${userId}&topicId=${topicId}&userKey=${userKey}`);
+      const sock = io(`${opts.socketHost}/socket?userId=${userId}&topicId=${topicId}&userKey=${userKey}`);
       sock.on('event', onEvent);
       return sock;
     },
@@ -28,7 +30,7 @@ module.exports = (userId, userKey, opts) => {
     },
 
     getApi() {
-      return Client(userId, userKey);
+      return Client(userId, userKey, opts);
     },
   };
 };
