@@ -38,6 +38,16 @@ ubsub forward <topic id> http://localhost:4000/path/to/it --method POST
 
 This will invoke the endpoint every time the public UbSub URL is hit.
 
+### Creating external URL to forward
+
+This is similar to forward, but will create a new topic automatically to be hit.
+
+```bash
+ubsub webhook http://localhost:4000 [--method POST] [--name mywebhook] [--keyless]
+```
+
+The URL for this topic will be output after starting, and deleted automatically upon exist (unless `--keep` is specified).
+
 ## Installing for App Use
 
 Installing into your project:

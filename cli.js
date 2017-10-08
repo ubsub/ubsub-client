@@ -7,6 +7,7 @@ const Ubsub = require('./index');
 const fs = require('fs');
 const os = require('os');
 const _ = require('lodash');
+const chalk = require('chalk');
 
 
 const CONFIG_PATH = `${os.homedir()}/.ubsub`;
@@ -28,7 +29,7 @@ function assertGetClient(args) {
 }
 
 function cmdLogin(args) {
-  console.log('Please login with your userId and key.')
+  console.log('Please login with your userId and key.');
   console.log('You can find your key on your user dashboard at https://ubsub.io');
   inquirer.prompt([
     {
@@ -73,7 +74,7 @@ function cmdListen(args) {
 }
 
 function cmdForward(args) {
-  console.error(`Forwarding: ${args.topic} -> ${args.url}...`);
+  console.error(`${chalk.bold('Forwarding')}: ${chalk.red(args.topic)} -> ${chalk.green(args.url)}...`);
   return assertGetClient(args)
     .listen(args.topic, event => {
       console.log(JSON.stringify(event));
@@ -82,20 +83,21 @@ function cmdForward(args) {
         url: args.url,
         validateStatus: null,
       }).then(resp => {
-        console.error(`  Received ${resp.status}`);
+        console.error(chalk.blue(`  Received ${resp.status}`));
       });
     });
 }
 
 function cmdWebhook(args) {
   const api = assertGetClient(args).getApi();
-  return api.createTopic(args.name || `Webhook${~~(Math.random()*1000)}`)
+  return api.createTopic(args.name || `Webhook${~~(Math.random() * 1000)}`, !args.keyless)
     .then(topic => {
       const sock = cmdForward(_.assign({
         topic: topic.id,
       }, args));
 
-      console.error(`Endpoint: https://router.ubsub.io/event/${topic.id}?key=${topic.key}`);
+      const url = `https://router.ubsub.io/event/${topic.id}${topic.key ? `?key=${topic.key}` : ''}`;
+      console.error(`${chalk.bold('Endpoint')}: ${chalk.underline(url)}`);
 
       // Hook on to SIGINT for cleanup
       process.on('SIGINT', () => {
@@ -139,7 +141,9 @@ const args = yargs
       .string('name')
       .describe('name', 'Name to give webhook on ubsub')
       .boolean('keep')
-      .describe('keep', 'If set, won\'t delete topic on exit');
+      .describe('keep', 'Do not delete topic on exit')
+      .boolean('keyless')
+      .describe('keyless', 'Do not generate key for endpoint');
   }, cmdWebhook)
   .demandCommand()
   .help('help')
