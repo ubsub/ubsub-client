@@ -6,6 +6,7 @@ const Client = require('./lib/client');
 const Ubsub = require('./index');
 const fs = require('fs');
 const os = require('os');
+const _ = require('lodash');
 
 
 const CONFIG_PATH = `${os.homedir()}/.ubsub`;
@@ -27,6 +28,8 @@ function assertGetClient(args) {
 }
 
 function cmdLogin(args) {
+  console.log('Please login with your userId and key.')
+  console.log('You can find your key on your user dashboard at https://ubsub.io');
   inquirer.prompt([
     {
       name: 'userId',
@@ -63,15 +66,15 @@ function cmdLogout() {
 
 function cmdListen(args) {
   console.error(`Listening to ${args.topic}...`);
-  assertGetClient(args)
+  return assertGetClient(args)
     .listen(args.topic, event => {
       console.log(JSON.stringify(event));
     });
 }
 
 function cmdForward(args) {
-  console.error(`Listening to ${args.topic}...`);
-  assertGetClient(args)
+  console.error(`Forwarding: ${args.topic} -> ${args.url}...`);
+  return assertGetClient(args)
     .listen(args.topic, event => {
       console.log(JSON.stringify(event));
       axios({
@@ -80,6 +83,31 @@ function cmdForward(args) {
         validateStatus: null,
       }).then(resp => {
         console.error(`  Received ${resp.status}`);
+      });
+    });
+}
+
+function cmdWebhook(args) {
+  const api = assertGetClient(args).getApi();
+  return api.createTopic(args.name || `Webhook${~~(Math.random()*1000)}`)
+    .then(topic => {
+      const sock = cmdForward(_.assign({
+        topic: topic.id,
+      }, args));
+
+      console.error(`Endpoint: https://router.ubsub.io/event/${topic.id}?key=${topic.key}`);
+
+      // Hook on to SIGINT for cleanup
+      process.on('SIGINT', () => {
+        if (!args.keep) {
+          console.error('Deleting topic...');
+          api.deleteTopic(topic.id)
+            .then(() => process.exit(0))
+            .catch(err => {
+              console.error(err.message);
+              process.exit(1);
+            });
+        } else process.exit(0);
       });
     });
 }
@@ -103,6 +131,16 @@ const args = yargs
       .describe('method', 'HTTP method to push to url with')
       .default('method', 'POST');
   }, cmdForward)
+  .command('webhook <url>', 'Creates a webhook URL that will forward an event to the provided URL', sub => {
+    return sub
+      .string('method')
+      .describe('method', 'HTTP method to push to the url with')
+      .default('method', 'POST')
+      .string('name')
+      .describe('name', 'Name to give webhook on ubsub')
+      .boolean('keep')
+      .describe('keep', 'If set, won\'t delete topic on exit');
+  }, cmdWebhook)
   .demandCommand()
   .help('help')
   .alias('help', 'h')
