@@ -145,6 +145,7 @@ const args = yargs
       .boolean('keyless')
       .describe('keyless', 'Do not generate key for endpoint');
   }, cmdWebhook)
+  .command('help <command>', 'Show help for a command', {}, () => args.showHelp())
   .demandCommand()
   .help('help')
   .alias('help', 'h')
