@@ -147,8 +147,11 @@ const args = yargs
   }, cmdWebhook)
   .command('help <command>', 'Show help for a command', {}, () => args.showHelp())
   .demandCommand()
+  .recommendCommands()
   .help('help')
   .alias('help', 'h')
-  .env('UBSUB');
+  .env('UBSUB')
+  .epilog(`You can set login information via environmental variables,
+    eg. UBSUB_USER, UBSUB_USERKEY`);
 
 args.parse();
