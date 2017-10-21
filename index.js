@@ -8,6 +8,8 @@ module.exports = (userId, userKey, ubsubOpts) => {
   const opts = _.assign({
     socketHost: 'https://socket.ubsub.io',
     routerHost: 'https://router.ubsub.io',
+    reconnect: true,
+    reconnectDelay: 5000,
   }, ubsubOpts);
 
   return {
@@ -19,6 +21,8 @@ module.exports = (userId, userKey, ubsubOpts) => {
       });
       sock.on('disconnect', () => {
         console.error(`Disconnected topic ${topicId}`);
+        if (opts.reconnect)
+          setTimeout(() => sock.connect(), opts.reconnectDelay);
       });
       return sock;
     },
