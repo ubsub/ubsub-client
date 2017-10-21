@@ -17,8 +17,8 @@ function loadConfig() {
   return null;
 }
 function assertGetClient(args) {
-  if (args.user && args.key)
-    return Ubsub(args.user, args.key);
+  if (args.user && args.userkey)
+    return Ubsub(args.user, args.userkey);
 
   const cfg = loadConfig();
   if (!cfg) {
@@ -122,8 +122,8 @@ const args = yargs
   .alias('v', 'verbose')
   .string('user')
   .describe('user', 'User id to override one that you logged in to')
-  .string('key')
-  .describe('key', 'User key to override your logged in account')
+  .string('userkey')
+  .describe('userkey', 'User key to override your logged in account')
   .command('login', 'Login to ubsub', {}, cmdLogin)
   .command('logout', 'Logout (delete config)', {}, cmdLogout)
   .command('listen <topic>', 'Listen to a topic and output to terminal', {}, cmdListen)
