@@ -61,7 +61,7 @@ See [examples/](examples/) for some sample uses.
 ### Listening to a Topic
 
 ```js
-const ubsub = require('ubsub')(<user id>, <user secret>);
+const ubsub = require('ubsub')(<user id>, <user secret>, [opts]);
 
 ubsub.listen(<topic id>, (event) => {
 	console.log('received event ' + JSON.stringify(event));
@@ -71,10 +71,16 @@ ubsub.listen(<topic id>, (event) => {
 ### Forwarding a Topic to an HTTP endpoint
 
 ```js
-const ubsub = require('ubsub')(<user id>, <user secret>);
+const ubsub = require('ubsub')(<user id>, <user secret>, [opts]);
 
 ubsub.forward(<topic id>, 'http://localhost:5000', {..optional axios opts..});
 ```
+
+## Options
+
+`reconnectOnError`: Whether or not to reconnect on a fatal error. This is separate from the default SocketIO reconnect. (default: true)
+
+`reconnectOnErrorDelay`: Number of milliseconds to delay the reconnect on error (default: 5000)
 
 # License
 
