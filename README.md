@@ -76,6 +76,13 @@ const ubsub = require('ubsub')(<user id>, <user secret>, [opts]);
 ubsub.forward(<topic id>, 'http://localhost:5000', {..optional axios opts..});
 ```
 
+### Sending an Event
+```js
+const ubsub = require('ubsub')(<user id>, <user secret>, [opts]);
+
+ubsub.send('topicId', 'key'/null, { payload: 123 }, [method = 'POST']);
+```
+
 ## Options
 
 `reconnectOnError`: Whether or not to reconnect on a fatal error. This is separate from the default SocketIO reconnect. (default: true)

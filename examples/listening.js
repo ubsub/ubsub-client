@@ -7,3 +7,5 @@ ubsub.listen('SylW8bIe3Z', (event) => {
 });
 
 ubsub.forward('SylW8bIe3Z', 'http://localhost:8000');
+
+ubsub.send('SylW8bIe3Z', null, { msg: 123 });

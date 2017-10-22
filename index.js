@@ -42,6 +42,17 @@ module.exports = (userId, userKey, ubsubOpts) => {
       });
     },
 
+    send(topicId, key, data, method = 'POST') {
+      return axios({
+        url: `${opts.routerHost}/event/${topicId}`,
+        method,
+        data,
+        headers: {
+          Authorization: `Bearer ${key}`,
+        },
+      });
+    },
+
     getApi() {
       return Client(userId, userKey, opts);
     },
