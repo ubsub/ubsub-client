@@ -17,15 +17,17 @@ function loadConfig() {
   return null;
 }
 function assertGetClient(args) {
+  const opts = { reconnectOnError: args.reconnect };
+
   if (args.user && args.userkey)
-    return Ubsub(args.user, args.userkey);
+    return Ubsub(args.user, args.userkey, opts);
 
   const cfg = loadConfig();
   if (!cfg) {
     console.error('No configuration found. Please run `ubsub login`');
     process.exit(1);
   }
-  return Ubsub(cfg.userId, cfg.userKey);
+  return Ubsub(cfg.userId, cfg.userKey, opts);
 }
 
 function cmdLogin(args) {
@@ -129,12 +131,16 @@ const args = yargs
   .command('listen <topic>', 'Listen to a topic and output to terminal', {}, cmdListen)
   .command('forward <topic> <url>', 'Forward an event from a topic to a url', sub => {
     return sub
+      .boolean('reconnect')
+      .describe('reconnect', 'Automatically reconnect socket upon disconnect-error')
       .string('method')
       .describe('method', 'HTTP method to push to url with')
       .default('method', 'POST');
   }, cmdForward)
   .command('webhook <url>', 'Creates a webhook URL that will forward an event to the provided URL', sub => {
     return sub
+      .boolean('reconnect')
+      .describe('reconnect', 'Automatically reconnect socket upon disconnect-error')
       .string('method')
       .describe('method', 'HTTP method to push to the url with')
       .default('method', 'POST')

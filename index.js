@@ -8,8 +8,8 @@ module.exports = (userId, userKey, ubsubOpts) => {
   const opts = _.assign({
     socketHost: 'https://socket.ubsub.io',
     routerHost: 'https://router.ubsub.io',
-    reconnect: true,
-    reconnectDelay: 5000,
+    reconnectOnError: true,
+    reconnectOnErrorDelay: 5000,
   }, ubsubOpts);
 
   return {
@@ -19,10 +19,13 @@ module.exports = (userId, userKey, ubsubOpts) => {
       sock.on('handshake-error', err => {
         console.error(`Failed to listen to topic ${topicId}: ${err.err}`);
       });
+      sock.on('reconnect', () => {
+        console.error(`Reconnected topic ${topicId}`);
+      });
       sock.on('disconnect', () => {
         console.error(`Disconnected topic ${topicId}`);
-        if (opts.reconnect)
-          setTimeout(() => sock.connect(), opts.reconnectDelay);
+        if (opts.reconnectOnError)
+          setTimeout(() => sock.connect(), opts.reconnectOnErrorDelay);
       });
       return sock;
     },
