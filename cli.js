@@ -119,7 +119,7 @@ function cmdWebhook(args) {
 /* eslint no-unused-vars: off */
 /* eslint arrow-body-style: off */
 const args = yargs
-  .usage('$0 <cmd> [args]')
+  .usage('$0 <cmd> [args]', 'UbSub CLI client and forwarder')
   .boolean('v')
   .alias('v', 'verbose')
   .string('user')
