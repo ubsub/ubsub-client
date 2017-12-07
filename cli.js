@@ -2,7 +2,6 @@
 const yargs = require('yargs');
 const inquirer = require('inquirer');
 const axios = require('axios');
-const Client = require('./lib/client');
 const Ubsub = require('./index');
 const fs = require('fs');
 const os = require('os');
@@ -44,7 +43,7 @@ function cmdLogin(args) {
       message: 'userKey',
     },
   ]).then(answers => {
-    const c = Client(answers.userId, answers.userKey);
+    const c = Ubsub(answers.userId, answers.userKey).getApi();
     return c.getTopics()
       .then(() => answers)
       .catch(err => {
