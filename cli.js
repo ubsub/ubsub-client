@@ -119,6 +119,31 @@ function cmdWebhook(args) {
     });
 }
 
+function cmdListTopics(args) {
+  const api = assertGetClient(args).getApi();
+  console.error('Topics:');
+  return api.getTopics()
+    .then(topics => {
+      _.each(topics, topic => {
+        console.error(`  [${chalk.greenBright(topic.id)}] ${chalk.green(topic.name || topic.id)}`);
+        _.each(topic.subscriptions, sub => {
+          console.error(`    [${chalk.blueBright(sub.id)}] ${chalk.blue(sub.name || sub.id)}`);
+        });
+      });
+    });
+}
+
+function cmdListTemplates(args) {
+  const api = assertGetClient(args).getApi();
+  console.error('Templates:');
+  return api.getTemplates()
+    .then(templates => {
+      _.each(templates, t => {
+        console.error(`  [${chalk.dim(t.id)}] (${chalk.dim(t.language)}) ${chalk.red(t.name)}`);
+      });
+    });
+}
+
 /* eslint no-unused-vars: off */
 /* eslint arrow-body-style: off */
 const args = yargs
@@ -154,6 +179,8 @@ const args = yargs
       .boolean('keyless')
       .describe('keyless', 'Do not generate key for endpoint');
   }, cmdWebhook)
+  .command('topics', 'List registered topics on ubsub', {}, cmdListTopics)
+  .command('templates', 'List registered templates on ubsub', {}, cmdListTemplates)
   .command('help <command>', 'Show help for a command', {}, () => args.showHelp())
   .demandCommand()
   .recommendCommands()
