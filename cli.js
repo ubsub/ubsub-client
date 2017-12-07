@@ -159,6 +159,7 @@ const args = yargs
   .recommendCommands()
   .help('help')
   .alias('help', 'h')
+  .version()
   .env('UBSUB')
   .epilog(`You can set login information via environmental variables,
     eg. UBSUB_USER, UBSUB_USERKEY`);
