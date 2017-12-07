@@ -63,7 +63,7 @@ See [examples/](examples/) for some sample uses.
 ```js
 const ubsub = require('ubsub')(<user id>, <user secret>, [opts]);
 
-ubsub.listen(<topic id>, (event) => {
+ubsub.listen(<topic id>, (event, { topicId }) => {
 	console.log('received event ' + JSON.stringify(event));
 });
 ```

@@ -15,7 +15,9 @@ module.exports = (userId, userKey, ubsubOpts) => {
   return {
     listen(topicId, onEvent) {
       const sock = io(`${opts.socketHost}/socket?userId=${userId}&topicId=${topicId}&userKey=${userKey}`);
-      sock.on('event', onEvent);
+      sock.on('event', (event) => {
+        onEvent(event.payload, _.omit(event, 'payload'));
+      });
       sock.on('handshake-error', err => {
         console.error(`Failed to listen to topic ${topicId}: ${err.err}`);
       });
@@ -31,10 +33,13 @@ module.exports = (userId, userKey, ubsubOpts) => {
     },
 
     forward(topicId, forwardUrl, httpOpts) {
-      return this.listen(topicId, data => {
-        axios(_.assign({
+      return this.listen(topicId, event => {
+        axios(_.merge({
           url: forwardUrl,
-          data,
+          data: event.payload,
+          headers: {
+            'X-Topic-Id': event.topicId,
+          },
           method: 'post', // default, can be overriden in opts
         }, httpOpts)).catch(err => {
           console.error(`Error forwarding event from '${topicId} to URL ${forwardUrl}: ${err.message}`);
