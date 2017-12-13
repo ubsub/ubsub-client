@@ -48,6 +48,26 @@ ubsub webhook http://localhost:4000 [--method POST] [--name mywebhook] [--keyles
 
 The URL for this topic will be output after starting, and deleted automatically upon exist (unless `--keep` is specified).
 
+### Managing Templates
+
+You're able to completely manage templates via the CLI client.
+
+Get existing template:
+```bash
+ubsub templates get --id <id>
+```
+
+Upload a template (will create new if `--id` is unspecified):
+```bash
+# Update
+ubsub templates push --id <id> filename.js
+
+# Create new
+ubsub templates push --lang JSVM --name test filename.js
+```
+
+
+
 ## Installing for App Use
 
 Installing into your project:

@@ -34,7 +34,7 @@
     "inquirer": "^3.3.0",
     "lodash": "^4.17.4",
     "socket.io-client": "^2.0.3",
-    "yargs": "^9.0.1"
+    "yargs": "^10.0.3"
   },
   "devDependencies": {
     "eslint": "^4.8.0",
