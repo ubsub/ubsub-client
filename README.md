@@ -1,6 +1,6 @@
 # ubsub-client
 
-[![Build Status](https://travis-ci.org/zix99/ubsub-client.svg?branch=master)](https://travis-ci.org/zix99/ubsub-client)
+[![Build Status](https://travis-ci.org/ubsub/ubsub-client.svg?branch=master)](https://travis-ci.org/ubsub/ubsub-client)
 [![npm](https://img.shields.io/npm/v/ubsub.svg)](https://www.npmjs.com/package/ubsub)
 [![npm](https://img.shields.io/npm/l/ubsub.svg)](https://www.npmjs.com/package/ubsub)
 
