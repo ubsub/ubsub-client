@@ -13,7 +13,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/zix99/ubsub-client.git"
+    "url": "git+https://github.com/ubsub/ubsub-client.git"
   },
   "keywords": [
     "PubSub",
@@ -25,9 +25,9 @@
   "author": "Chris LaPointe",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/zix99/ubsub-client/issues"
+    "url": "https://github.com/ubsub/ubsub-client/issues"
   },
-  "homepage": "https://github.com/zix99/ubsub-client#readme",
+  "homepage": "https://github.com/ubsub/ubsub-client#readme",
   "dependencies": {
     "axios": "^0.16.2",
     "chalk": "^2.1.0",
