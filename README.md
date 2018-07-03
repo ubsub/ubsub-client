@@ -73,7 +73,7 @@ ubsub templates push --lang JSVM --name test filename.js
 Installing into your project:
 
 ```bash
-npm install --save ubsub-client
+npm install --save ubsub
 ```
 
 See [examples/](examples/) for some sample uses.
@@ -83,7 +83,7 @@ See [examples/](examples/) for some sample uses.
 ```js
 const ubsub = require('ubsub')(<user id>, <user secret>, [opts]);
 
-ubsub.listen(<topic id>, (event, { topicId }) => {
+ubsub.listen(<topic id>, (event, rawSocketEvent ) => {
 	console.log('received event ' + JSON.stringify(event));
 });
 ```
