@@ -32,6 +32,19 @@ module.exports = (userId, userKey, ubsubOpts) => {
       return sock;
     },
 
+    pipe(topicId, topicKey = null) {
+      const sock = io(`${opts.socketHost}/socket?userId=${userId}&userKey=${userKey}`);
+      function cb(payload) {
+        sock.emit('event', {
+          topicId,
+          topicKey,
+          payload,
+        });
+      }
+      cb.sock = sock;
+      return cb;
+    },
+
     forward(topicId, forwardUrl, httpOpts) {
       return this.listen(topicId, event => {
         axios(_.merge({

@@ -48,6 +48,15 @@ ubsub webhook http://localhost:4000 [--method POST] [--name mywebhook] [--keyles
 
 The URL for this topic will be output after starting, and deleted automatically upon exist (unless `--keep` is specified).
 
+### Piping stdin to a topic
+
+You can also pipe stdin (or a file) to a topic.
+
+```bash
+# Piping and following syslog to a topic
+tail -f /var/log/syslog | ubsub pipe <topicId>
+```
+
 ### Managing Templates
 
 You're able to completely manage templates via the CLI client.

@@ -7,6 +7,7 @@ const fs = require('fs');
 const os = require('os');
 const _ = require('lodash');
 const chalk = require('chalk');
+const readline = require('readline');
 
 
 const CONFIG_PATH = `${os.homedir()}/.ubsub`;
@@ -117,6 +118,29 @@ function cmdWebhook(args) {
         } else process.exit(0);
       });
     });
+}
+
+function cmdPipe(args) {
+  const cb = assertGetClient(args).pipe(args.topic, args.key);
+  const rl = readline.createInterface({
+    input: process.stdin,
+  });
+  rl.on('line', line => {
+    let data = null;
+    try {
+      data = JSON.parse(line);
+    } catch (e) {
+      data = {
+        line,
+      };
+    }
+    if (args.name)
+      data.name = args.name;
+    cb(data);
+  });
+  rl.on('close', () => {
+    cb.sock.close();
+  });
 }
 
 function cmdListTopics(args) {
@@ -243,6 +267,13 @@ const args = yargs
       .boolean('keyless')
       .describe('keyless', 'Do not generate key for endpoint');
   }, cmdWebhook)
+  .command('pipe <topic>', 'Pipe stdin to a given topic.  Will try to parse JSON, or encapsulate', sub => {
+    return sub
+      .string('key')
+      .describe('key', 'Key for topic')
+      .string('name')
+      .describe('name', 'Name to associate with the application');
+  }, cmdPipe)
   .command('topics', 'List registered topics on ubsub', {}, cmdListTopics)
   .command('templates [command] [file]', 'List registered templates on ubsub', sub => {
     return sub
