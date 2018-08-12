@@ -1,6 +1,6 @@
 {
   "name": "ubsub",
-  "version": "0.2.8",
+  "version": "0.2.9",
   "description": "Quickly and easily integrate with events on ubsub.io",
   "main": "index.js",
   "bin": {
