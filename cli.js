@@ -315,7 +315,10 @@ const args = yargs
   .alias('help', 'h')
   .version()
   .env('UBSUB')
-  .epilog(`You can set login information via environmental variables,
-    eg. UBSUB_USER, UBSUB_USERKEY`);
+  .epilog(`Epilog:
+    You can set login information via environmental variables,
+    eg. UBSUB_USER, UBSUB_USERKEY
+
+    Add --help after any command to see more detail`);
 
 args.parse();
