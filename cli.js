@@ -48,7 +48,7 @@ function cmdLogin(args) {
     return c.getTopics()
       .then(() => answers)
       .catch(err => {
-        throw Error(`Unable to login user: ${err.message}`);
+        throw Error(`Unable to login user: ${chalk.red(err.message)}`);
       });
   }).then(answers => {
     console.error(`Saving configuration to: ${CONFIG_PATH}`);
@@ -65,6 +65,15 @@ function cmdLogout() {
   } catch (err) {
     console.error(`Error deleting config: ${err.message}`);
   }
+}
+
+function cmdInfo(args) {
+  const config = loadConfig();
+  const client = assertGetClient(args);
+  const api = client.getApi();
+
+  console.error(`${chalk.dim('UserId: ')}${args.user || config.userId}`);
+  console.error(`${chalk.dim('Url:    ')}${api.routerUrl()}`);
 }
 
 function cmdListen(args) {
@@ -220,7 +229,7 @@ function cmdListTemplates(args) {
     });
   } else if (args.command === 'get') {
     if (!args.id) {
-      console.error('Need to specify template id');
+      console.error(`Need to specify template id with ${chalk.bold('--id')}`);
       return null;
     }
     return api.getTemplate(args.id)
@@ -278,6 +287,7 @@ const args = yargs
   .describe('userkey', 'User key to override your logged in account')
   .command('login', 'Login to ubsub', {}, cmdLogin)
   .command('logout', 'Logout (delete config)', {}, cmdLogout)
+  .command('info', 'Output info about current config', {}, cmdInfo)
   .command('listen <topic>', 'Listen to a topic and output to terminal', sub => {
     return sub
       .boolean('create')
