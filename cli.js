@@ -83,7 +83,10 @@ function cmdListen(args) {
     console.error(`${chalk.bold('Endpoint')}: ${chalk.underline(url)}`);
 
     const sock = client.listen(topic.id, event => {
-      console.log(JSON.stringify(event));
+      if (args.format)
+        console.dir(event, { depth: null, colors: true });
+      else
+        console.log(JSON.stringify(event));
     });
 
     process.on('SIGINT', () => {
@@ -282,7 +285,9 @@ const args = yargs
       .boolean('keep')
       .describe('keep', 'Keep a newly created topic rather than deleting when done')
       .boolean('keyless')
-      .describe('keyless', 'Do not assign a key of creating a topic');
+      .describe('keyless', 'Do not assign a key of creating a topic')
+      .boolean('format')
+      .describe('format', 'Format outputted JSON');
   }, cmdListen)
   .command('forward <topic> <url>', 'Forward an event from a topic to a url', sub => {
     return sub
