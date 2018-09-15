@@ -365,6 +365,8 @@ const args = yargs
   .command('help <command>', 'Show help for a command', {}, () => args.showHelp())
   .example('$0 templates --help', 'See more help about templates')
   .example('$0 listen <topic> --create', 'Listen to a newly created topic')
+  .example('tail -f /var/log/syslog | $0 pipe id', 'Pipe a tail\'d file to a topic')
+  .example('$0 webhook http://localhost:8080', 'Create a public webhook that will push events to a local URL')
   .demandCommand()
   .recommendCommands()
   .help('help')
