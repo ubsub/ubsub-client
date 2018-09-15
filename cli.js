@@ -68,11 +68,41 @@ function cmdLogout() {
 }
 
 function cmdListen(args) {
-  console.error(`Listening to ${args.topic}...`);
-  return assertGetClient(args)
-    .listen(args.topic, event => {
+  const client = assertGetClient(args);
+  const api = client.getApi();
+
+  let topicGet = null;
+  if (args.create)
+    topicGet = api.createTopic(args.topic, !args.keyless);
+  else
+    topicGet = api.getTopicById(args.topic);
+
+  return topicGet.then(topic => {
+    const url = `${api.routerUrl()}/event/${topic.id}${topic.key ? `?key=${topic.key}` : ''}`;
+    console.error(`${chalk.bold('Listening')}: [${chalk.greenBright(topic.id)}] ${chalk.green(topic.name || topic.id)}`);
+    console.error(`${chalk.bold('Endpoint')}: ${chalk.underline(url)}`);
+
+    const sock = client.listen(topic.id, event => {
       console.log(JSON.stringify(event));
     });
+
+    process.on('SIGINT', () => {
+      sock.close();
+      if (!args.keep && args.create) {
+        console.error('Deleting topic...');
+        api.deleteTopic(topic.id)
+          .then(() => process.exit(0))
+          .catch(err => {
+            console.error(chalk.red(err.message));
+            process.exit(1);
+          });
+      } else process.exit(0);
+    });
+  }).catch(err => {
+    console.error(`Error listening to topic: ${chalk.red(err.message)}`);
+    console.error(`Did you try to listen to a topic that does not exist? Try adding ${chalk.bold('--create')}`);
+    process.exit(1);
+  });
 }
 
 function cmdForward(args) {
@@ -102,11 +132,12 @@ function cmdWebhook(args) {
         topic: topic.id,
       }, args));
 
-      const url = `https://router.ubsub.io/event/${topic.id}${topic.key ? `?key=${topic.key}` : ''}`;
+      const url = `${api.routerUrl()}/event/${topic.id}${topic.key ? `?key=${topic.key}` : ''}`;
       console.error(`${chalk.bold('Endpoint')}: ${chalk.underline(url)}`);
 
       // Hook on to SIGINT for cleanup
       process.on('SIGINT', () => {
+        sock.close();
         if (!args.keep) {
           console.error('Deleting topic...');
           api.deleteTopic(topic.id)
@@ -244,7 +275,15 @@ const args = yargs
   .describe('userkey', 'User key to override your logged in account')
   .command('login', 'Login to ubsub', {}, cmdLogin)
   .command('logout', 'Logout (delete config)', {}, cmdLogout)
-  .command('listen <topic>', 'Listen to a topic and output to terminal', {}, cmdListen)
+  .command('listen <topic>', 'Listen to a topic and output to terminal', sub => {
+    return sub
+      .boolean('create')
+      .describe('create', 'Create a new topic rather than listening to existing')
+      .boolean('keep')
+      .describe('keep', 'Keep a newly created topic rather than deleting when done')
+      .boolean('keyless')
+      .describe('keyless', 'Do not assign a key of creating a topic');
+  }, cmdListen)
   .command('forward <topic> <url>', 'Forward an event from a topic to a url', sub => {
     return sub
       .boolean('reconnect')
@@ -309,6 +348,8 @@ const args = yargs
       .boolean('show');
   }, cmdTokens)
   .command('help <command>', 'Show help for a command', {}, () => args.showHelp())
+  .example('$0 templates --help', 'See more help about templates')
+  .example('$0 listen <topic> --create', 'Listen to a newly created topic')
   .demandCommand()
   .recommendCommands()
   .help('help')
