@@ -68,12 +68,17 @@ function cmdLogout() {
 }
 
 function cmdInfo(args) {
-  const config = loadConfig();
-  const client = assertGetClient(args);
-  const api = client.getApi();
+  const api = assertGetClient(args).getApi();
 
-  console.error(`${chalk.dim('UserId: ')}${args.user || config.userId}`);
-  console.error(`${chalk.dim('Url:    ')}${api.routerUrl()}`);
+  if (args.v)
+    console.error(chalk.dim('Fetching user info...'));
+
+  api.getUser()
+    .then(user => {
+      console.error(`${chalk.dim('UserId:  ')}${user.id}`);
+      console.error(`${chalk.dim('Created: ')}${user.createdAt}`);
+      console.error(`${chalk.dim('Url:     ')}${api.routerUrl()}`);
+    });
 }
 
 function cmdListen(args) {
