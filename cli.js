@@ -117,7 +117,7 @@ function cmdListen(args) {
   });
 }
 
-function cmdExport(args) {
+function cmdEvents(args) {
   const client = assertGetClient(args);
   const api = client.getApi();
   const cols = args.csv ? args.csv.split(',') : null;
@@ -346,14 +346,14 @@ const args = yargs
       .boolean('format')
       .describe('format', 'Format outputted JSON');
   }, cmdListen)
-  .command('export [topic]', 'Export saved events from a topic', sub => {
+  .command('events [topic]', 'Fetch saved events from a topic', sub => {
     return sub
       .string('after')
       .describe('after', 'Look at events only after a specific date')
       .string('before')
       .describe('before', 'Look at events only before the specific date')
       .boolean('decorate')
-      .describe('decorate', 'Export tab-separated values about event before payload')
+      .describe('decorate', 'Output tab-separated values about event before payload')
       .string('csv')
       .describe('csv', 'Outpost CSV with the provided headers eg. a,b,c')
       .number('page')
@@ -366,7 +366,7 @@ const args = yargs
       .describe('order', 'Which variable to order by')
       .string('search')
       .describe('search', 'String to fuzzy-search the payload for');
-  }, cmdExport)
+  }, cmdEvents)
   .command('forward <topic> <url>', 'Forward an event from a topic to a url', sub => {
     return sub
       .boolean('reconnect')
