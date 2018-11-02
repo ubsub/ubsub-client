@@ -4,31 +4,12 @@ const inquirer = require('inquirer');
 const axios = require('axios');
 const Ubsub = require('./index');
 const fs = require('fs');
-const os = require('os');
 const _ = require('lodash');
 const chalk = require('chalk');
 const readline = require('readline');
+const authUtil = require('./cmds/authUtil');
 
-
-const CONFIG_PATH = `${os.homedir()}/.ubsub`;
-function loadConfig() {
-  if (fs.existsSync(CONFIG_PATH))
-    return JSON.parse(fs.readFileSync(CONFIG_PATH, 'utf8'));
-  return null;
-}
-function assertGetClient(args) {
-  const opts = { reconnectOnError: args.reconnect };
-
-  if (args.user && args.userkey)
-    return Ubsub(args.user, args.userkey, opts);
-
-  const cfg = loadConfig();
-  if (!cfg) {
-    console.error('No configuration found. Please run `ubsub login`');
-    process.exit(1);
-  }
-  return Ubsub(cfg.userId, cfg.userKey, opts);
-}
+const { assertGetClient } = authUtil;
 
 function cmdLogin(args) {
   console.log('Please login with your userId and key.');
@@ -51,20 +32,14 @@ function cmdLogin(args) {
         throw Error(`Unable to login user: ${chalk.red(err.message)}`);
       });
   }).then(answers => {
-    console.error(`Saving configuration to: ${CONFIG_PATH}`);
-    fs.writeFileSync(CONFIG_PATH, JSON.stringify(answers, null, '\t'));
+    authUtil.saveCredentials(answers.userId, answers.userKey);
   }).catch(err => {
     console.error(err.message);
   });
 }
 
 function cmdLogout() {
-  try {
-    fs.unlinkSync(CONFIG_PATH);
-    console.error('Config deleted');
-  } catch (err) {
-    console.error(`Error deleting config: ${err.message}`);
-  }
+  authUtil.deleteCredentials();
 }
 
 function cmdInfo(args) {
