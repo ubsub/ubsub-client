@@ -31,6 +31,6 @@ exports.handler = function cmdPipe(args) {
     cb(data);
   });
   rl.on('close', () => {
-    cb.sock.disconnect();
+    cb.sock.emit('shutdown');
   });
 };
