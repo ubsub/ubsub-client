@@ -1,7 +1,7 @@
 const chalk = require('chalk');
 const _ = require('lodash');
 const fs = require('fs');
-const { assertGetClient } = require('./authUtil');
+const { assertGetClient, catchError } = require('./authUtil');
 
 exports.command = 'templates [command] [file]';
 exports.desc = 'List registered templates on ubsub';
@@ -35,7 +35,8 @@ exports.handler = function cmdListTemplates(args) {
         _.each(templates, t => {
           console.error(`  [${chalk.dim(t.id)}] (${chalk.dim(t.language)}) ${chalk.red(t.name)}`);
         });
-      });
+      })
+      .catch(catchError);
   } else if (args.command === 'push') {
     console.error(`Pushing ${chalk.bold(args.file)} to ${chalk.bold(args.id || 'new template')}...`);
     return api.createOrUpdateTemplate({
@@ -49,9 +50,7 @@ exports.handler = function cmdListTemplates(args) {
       console.error(`${chalk.dim('Name: ')}${template.name}`);
       console.error(`${chalk.dim('Lang: ')}${template.language}`);
       console.error(`${chalk.dim('Last: ')}${template.updatedAt}`);
-    }).catch(err => {
-      console.error(chalk.red(`Error: ${err.message}; ${err.response.data.message}`));
-    });
+    }).catch(catchError);
   } else if (args.command === 'get') {
     if (!args.id) {
       console.error(`Need to specify template id with ${chalk.bold('--id')}`);
@@ -65,9 +64,7 @@ exports.handler = function cmdListTemplates(args) {
         console.error(`${chalk.dim('Last: ')}${template.updatedAt}`);
         console.error('');
         console.log(template.source); // Specifically not error
-      }).catch(err => {
-        console.error(chalk.red(`Error: ${err.message}`));
-      });
+      }).catch(catchError);
   }
   console.error(`Unknown command: ${args.command}`);
   return null;

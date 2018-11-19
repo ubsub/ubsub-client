@@ -1,5 +1,5 @@
 const chalk = require('chalk');
-const { assertGetClient } = require('./authUtil');
+const { assertGetClient, catchError } = require('./authUtil');
 
 exports.command = 'info';
 exports.desc = 'Output info about current user';
@@ -16,5 +16,5 @@ exports.handler = function cmdInfo(args) {
       console.error(`${chalk.dim('UserId:  ')}${user.id}`);
       console.error(`${chalk.dim('Created: ')}${user.createdAt}`);
       console.error(`${chalk.dim('Url:     ')}${api.routerUrl()}`);
-    });
+    }).catch(catchError);
 };

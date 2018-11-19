@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 const yargs = require('yargs');
+const chalk = require('chalk');
 
 const args = yargs
   .usage('$0 <cmd> [args]')
@@ -38,4 +39,9 @@ const args = yargs
 
     Add --help after any command to see more detail`);
 
-args.parse();
+try {
+  args.parse();
+} catch (err) {
+  console.error(chalk.red(err.message));
+  console.error(chalk.dim('Try adding --help for more info'));
+}

@@ -30,5 +30,6 @@ exports.handler = function cmdLogin(args) {
     authUtil.saveCredentials(answers.userId, answers.userKey);
   }).catch(err => {
     console.error(err.message);
+    process.exit(3);
   });
 };

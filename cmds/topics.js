@@ -1,6 +1,6 @@
 const chalk = require('chalk');
 const _ = require('lodash');
-const { assertGetClient } = require('./authUtil');
+const { assertGetClient, catchError } = require('./authUtil');
 
 exports.command = 'topics';
 exports.desc = 'List registered topics on ubsub';
@@ -16,5 +16,5 @@ exports.handler = function cmdListTopics(args) {
           console.error(`    [${chalk.blueBright(sub.id)}] ${chalk.blue(sub.name || sub.id)}`);
         });
       });
-    });
+    }).catch(catchError);
 };

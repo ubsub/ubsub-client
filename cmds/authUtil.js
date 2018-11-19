@@ -1,5 +1,7 @@
 const os = require('os');
 const fs = require('fs');
+const chalk = require('chalk');
+const _ = require('lodash');
 const Ubsub = require('../index');
 
 const CONFIG_PATH = `${os.homedir()}/.ubsub`;
@@ -38,5 +40,18 @@ module.exports = {
     } catch (err) {
       console.error(`Error deleting config: ${err.message}`);
     }
+  },
+
+  catchError(err) {
+    if (err instanceof Error) {
+      if (err.response) {
+        const subError = _.get(err, 'response.data.message', 'Unknown');
+        console.error(chalk.red(`${err.message}: ${chalk.dim(subError)}`));
+      } else
+        console.error(chalk.red(err.message));
+    } else
+      console.error(chalk.red(err));
+
+    process.exit(2);
   },
 };

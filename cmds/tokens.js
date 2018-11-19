@@ -1,6 +1,6 @@
 const chalk = require('chalk');
 const _ = require('lodash');
-const { assertGetClient } = require('./authUtil');
+const { assertGetClient, catchError } = require('./authUtil');
 
 exports.command = 'tokens [command]';
 exports.desc = 'List tokens on ubsub';
@@ -30,18 +30,14 @@ exports.handler = function cmdTokens(args) {
         _.each(tokens, t => {
           console.error(`  [${chalk.dim(t.id)}] ${chalk.green(t.name)} ${!args.show ? chalk.dim('<Hidden>') : chalk.cyan(t.secret)} (${chalk.blue(t.scope)})`);
         });
-      }).catch(err => {
-        console.error(chalk.red(`Error: ${err.message}`));
-      });
+      }).catch(catchError);
   } else if (args.command === 'create') {
     return api.createToken(args.name, args.scope)
       .then(token => {
         console.error('Token created:');
         console.error(`Id:     ${token.id}`);
         console.error(`Secret: ${token.secret}`);
-      }).catch(err => {
-        console.error(chalk.red(`Error: ${err.message}`));
-      });
+      }).catch(catchError);
   }
   console.error(`Unknown command: ${args.command}`);
   return null;

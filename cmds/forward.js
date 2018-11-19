@@ -1,6 +1,6 @@
 const chalk = require('chalk');
 const axios = require('axios');
-const { assertGetClient } = require('./authUtil');
+const { assertGetClient, catchError } = require('./authUtil');
 
 exports.command = 'forward <topic> <url>';
 exports.desc = 'Forward an event from a topic to a url';
@@ -27,8 +27,6 @@ exports.handler = function cmdForward(args) {
         },
       }).then(resp => {
         console.error(chalk.blue(`  Received ${resp.status}`));
-      }).catch(err => {
-        console.error(chalk.red(err));
-      });
+      }).catch(catchError);
     });
 };

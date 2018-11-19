@@ -1,6 +1,6 @@
 const chalk = require('chalk');
 const _ = require('lodash');
-const { assertGetClient } = require('./authUtil');
+const { assertGetClient, catchError } = require('./authUtil');
 
 exports.command = 'events [topic]';
 exports.desc = 'Fetch saved events from a topic';
@@ -60,10 +60,7 @@ exports.handler = function cmdEvents(args) {
       if (events.length !== 0)
         return getPage(offset + events.length);
       return null;
-    }).catch(err => {
-      console.error(chalk.red(err.message));
-      process.exit(1);
-    });
+    }).catch(catchError);
   }
 
   return getPage(0);
