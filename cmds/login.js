@@ -21,7 +21,7 @@ exports.handler = function cmdLogin(args) {
     },
   ]).then(answers => {
     const c = Ubsub(answers.userId, answers.userKey).getApi();
-    return c.getTopics()
+    return c.getUser()
       .then(() => answers)
       .catch(err => {
         throw Error(`Unable to login user: ${chalk.red(err.message)}`);
