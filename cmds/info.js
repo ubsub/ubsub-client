@@ -12,6 +12,7 @@ exports.handler = function cmdInfo(args) {
 
   api.getUser()
     .then(user => {
+      console.error(`${chalk.dim('TokenId: ')}${api.tokenId()}`);
       console.error(`${chalk.dim('UserId:  ')}${user.id}`);
       console.error(`${chalk.dim('Created: ')}${user.createdAt}`);
       console.error(`${chalk.dim('Url:     ')}${api.routerUrl()}`);
