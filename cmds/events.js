@@ -14,6 +14,8 @@ exports.builder = sub => sub
   .describe('decorate', 'Output tab-separated values about event before payload')
   .string('csv')
   .describe('csv', 'Outpost CSV with the provided headers eg. a,b,c')
+  .boolean('format')
+  .describe('format', 'Format the JSON before outputting it')
   .number('page')
   .describe('page', 'Number of events to get with each page')
   .default('page', 100)
@@ -45,16 +47,21 @@ exports.handler = function cmdEvents(args) {
       direction: args.direction,
     }).then(events => {
       _.each(events, event => {
-        if (args.decorate)
-          process.stdout.write(`${event.id}\t${event.topic_id}\t${event.createdAt}\t${event.delivery_count}\t`);
+        if (args.format) {
+          // Formatting JSON doesn't support other flags
+          console.dir(JSON.parse(event.payload), { depth: null, colors: true });
+        } else {
+          if (args.decorate)
+            process.stdout.write(`${event.id}\t${event.topic_id}\t${event.createdAt}\t${event.delivery_count}\t`);
 
-        if (cols) {
-          const parsedEvent = JSON.parse(event.payload);
-          process.stdout.write(_.map(cols, c => _.get(parsedEvent, c)).join(','));
-        } else
-          process.stdout.write(event.payload);
+          if (cols) {
+            const parsedEvent = JSON.parse(event.payload);
+            process.stdout.write(_.map(cols, c => _.get(parsedEvent, c)).join(','));
+          } else
+            process.stdout.write(event.payload);
 
-        process.stdout.write('\n');
+          process.stdout.write('\n');
+        }
       });
 
       if (events.length !== 0)
