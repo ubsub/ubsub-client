@@ -18,6 +18,9 @@ module.exports = (userId, userKey, ubsubOpts) => {
       sock.on('event', (event) => {
         onEvent(event.payload, _.omit(event, 'payload'));
       });
+      sock.on('connect', () => {
+        console.error(`Connected to ${topicId}`);
+      });
       sock.on('handshake-error', err => {
         console.error(`Failed to listen to topic ${topicId}: ${err.err}`);
       });
@@ -26,8 +29,10 @@ module.exports = (userId, userKey, ubsubOpts) => {
       });
       sock.on('disconnect', () => {
         console.error(`Disconnected topic ${topicId}`);
-        if (opts.reconnectOnError)
+        if (opts.reconnectOnError) {
+          console.error(`Attempting reconnect to ${topicId}...`);
           setTimeout(() => sock.connect(), opts.reconnectOnErrorDelay);
+        }
       });
       return sock;
     },
