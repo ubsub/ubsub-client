@@ -12,7 +12,9 @@ exports.builder = sub => sub
   .boolean('keyless')
   .describe('keyless', 'Do not assign a key of creating a topic')
   .boolean('format')
-  .describe('format', 'Format outputted JSON');
+  .describe('format', 'Format outputted JSON')
+  .boolean('reconnect')
+  .describe('reconnect', 'Automatically reconnect socket upon disconnect-error');
 
 exports.handler = function cmdListen(args) {
   const client = assertGetClient(args);
@@ -22,7 +24,7 @@ exports.handler = function cmdListen(args) {
   if (args.create)
     topicGet = api.createTopic(args.topic, !args.keyless);
   else
-    topicGet = api.getTopicById(args.topic);
+    topicGet = api.getTopicByIdOrName(args.topic);
 
   return topicGet.then(topic => {
     const url = `${api.routerUrl()}/event/${topic.id}${topic.key ? `?key=${topic.key}` : ''}`;
