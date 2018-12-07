@@ -32,43 +32,53 @@ exports.handler = function cmdEvents(args) {
   const api = client.getApi();
   const cols = args.csv ? args.csv.split(',') : null;
 
-  function getPage(offset) {
-    if (args.v)
-      console.error(chalk.dim(`Fetching page with offset ${offset}...`));
-
-    return api.getEvents({
-      offset,
-      limit: args.page || 500,
-      topic_id: args.topic,
-      after: args.after,
-      before: args.before,
-      search: args.search,
-      order: args.order,
-      direction: args.direction,
-    }).then(events => {
-      _.each(events, event => {
-        if (args.format) {
-          // Formatting JSON doesn't support other flags
-          console.dir(JSON.parse(event.payload), { depth: null, colors: true });
-        } else {
-          if (args.decorate)
-            process.stdout.write(`${event.id}\t${event.topic_id}\t${event.createdAt}\t${event.delivery_count}\t`);
-
-          if (cols) {
-            const parsedEvent = JSON.parse(event.payload);
-            process.stdout.write(_.map(cols, c => _.get(parsedEvent, c)).join(','));
-          } else
-            process.stdout.write(event.payload);
-
-          process.stdout.write('\n');
-        }
-      });
-
-      if (events.length !== 0)
-        return getPage(offset + events.length);
-      return null;
-    }).catch(catchError);
+  function resolveTopic() {
+    if (!args.topic)
+      return Promise.resolve(args.topic);
+    return api.getTopicByIdOrName(args.topic)
+      .then(topic => topic.id);
   }
 
-  return getPage(0);
+  return resolveTopic()
+    .then(topicId => {
+      function getPage(offset) {
+        if (args.v)
+          console.error(chalk.dim(`Fetching page with offset ${offset}...`));
+
+        return api.getEvents({
+          offset,
+          limit: args.page || 500,
+          topic_id: topicId,
+          after: args.after,
+          before: args.before,
+          search: args.search,
+          order: args.order,
+          direction: args.direction,
+        }).then(events => {
+          _.each(events, event => {
+            if (args.format) {
+              // Formatting JSON doesn't support other flags
+              console.dir(JSON.parse(event.payload), { depth: null, colors: true });
+            } else {
+              if (args.decorate)
+                process.stdout.write(`${event.id}\t${event.topic_id}\t${event.createdAt}\t${event.delivery_count}\t`);
+
+              if (cols) {
+                const parsedEvent = JSON.parse(event.payload);
+                process.stdout.write(_.map(cols, c => _.get(parsedEvent, c)).join(','));
+              } else
+                process.stdout.write(event.payload);
+
+              process.stdout.write('\n');
+            }
+          });
+
+          if (events.length !== 0)
+            return getPage(offset + events.length);
+          return null;
+        });
+      }
+
+      return getPage(0);
+    }).catch(catchError);
 };
