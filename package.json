@@ -31,6 +31,7 @@
   "dependencies": {
     "axios": "^0.16.2",
     "chalk": "^2.1.0",
+    "columnify": "^1.5.4",
     "inquirer": "^3.3.0",
     "lodash": "^4.17.11",
     "socket.io-client": "^2.0.3",

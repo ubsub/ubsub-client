@@ -1,5 +1,6 @@
 const chalk = require('chalk');
 const _ = require('lodash');
+const columnify = require('columnify');
 const { assertGetClient, catchError } = require('./authUtil');
 
 exports.command = 'tokens [command]';
@@ -27,9 +28,13 @@ exports.handler = function cmdTokens(args) {
     console.error('Tokens:');
     return api.getTokens()
       .then(tokens => {
-        _.each(tokens, t => {
-          console.error(`  [${chalk.dim(t.id)}] ${chalk.green(t.name)} ${!args.show ? chalk.dim('<Hidden>') : chalk.cyan(t.secret)} (${chalk.blue(t.scope)})`);
-        });
+        console.error(columnify(_.map(tokens, x => ({
+          id: chalk.dim(x.id),
+          name: chalk.green(x.name),
+          secret: !args.show ? chalk.dim('<Hidden>') : chalk.cyan(x.secret),
+          client: chalk.yellow(chalk.client || '-'),
+          scope: chalk.blue(x.scope),
+        }))));
       }).catch(catchError);
   } else if (args.command === 'create') {
     return api.createToken(args.name, args.scope)
