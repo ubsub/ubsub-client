@@ -1,4 +1,5 @@
 const chalk = require('chalk');
+const columnify = require('columnify');
 const _ = require('lodash');
 const fs = require('fs');
 const { assertGetClient, catchError } = require('./authUtil');
@@ -32,9 +33,11 @@ exports.handler = function cmdListTemplates(args) {
     console.error('Templates:');
     return api.getTemplates()
       .then(templates => {
-        _.each(templates, t => {
-          console.error(`  [${chalk.dim(t.id)}] (${chalk.dim(t.language)}) ${chalk.red(t.name)}`);
-        });
+        console.error(columnify(_.map(templates, t => ({
+          id: chalk.dim(t.id),
+          language: chalk.dim(t.language),
+          name: chalk.red(t.name),
+        }))));
       })
       .catch(catchError);
   } else if (args.command === 'push') {
