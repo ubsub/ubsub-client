@@ -18,6 +18,8 @@ exports.builder = sub => sub
   .describe('scope', 'The scope to create the token with')
   .string('scope')
   .default('scope', 'user topic.* subscription.* event.* template.*')
+  .describe('client', 'The client the token belongs to')
+  .string('client')
   .describe('show', 'Show secrets')
   .boolean('show');
 
@@ -32,16 +34,16 @@ exports.handler = function cmdTokens(args) {
           id: chalk.dim(x.id),
           name: chalk.green(x.name),
           secret: !args.show ? chalk.dim('<Hidden>') : chalk.cyan(x.secret),
-          client: chalk.yellow(chalk.client || '-'),
+          clientId: chalk.yellow(x.client_id || '-'),
           scope: chalk.blue(x.scope),
         }))));
       }).catch(catchError);
   } else if (args.command === 'create') {
-    return api.createToken(args.name, args.scope)
+    return api.createToken(args.name, args.scope, args.client)
       .then(token => {
         console.error('Token created:');
-        console.error(`Id:     ${token.id}`);
-        console.error(`Secret: ${token.secret}`);
+        console.error(`Id:     ${chalk.green(token.id)}`);
+        console.error(`Secret: ${chalk.cyan(token.secret)}`);
       }).catch(catchError);
   }
   console.error(`Unknown command: ${args.command}`);
