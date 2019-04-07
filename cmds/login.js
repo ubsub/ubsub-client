@@ -8,7 +8,7 @@ exports.desc = 'Login to ubsub';
 
 exports.handler = function cmdLogin(args) {
   console.log('Please login with your userId and key.');
-  console.log('You can find your key on your user dashboard at https://ubsub.io');
+  console.log('You can find or create a key on the tokens page at https://app.ubsub.io');
   inquirer.prompt([
     {
       name: 'userId',

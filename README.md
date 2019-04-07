@@ -75,6 +75,15 @@ ubsub templates push --id <id> filename.js
 ubsub templates push --lang JSVM --name test filename.js
 ```
 
+### Other commands
+
+Other useful commands include things like:
+
+ * topics - View list of all topics and subscriptions
+ * events - List all historic events
+ * tokens - Manage and list tokens
+
+For a full list of features, run: `ubsub --help`
 
 
 ## Installing for App Use
