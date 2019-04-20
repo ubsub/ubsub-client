@@ -1,8 +1,18 @@
 language: node_js
 node_js:
-  - "6"
+- '8'
 install:
-  - npm install
+- npm install
 script:
-  - npm test
-  - npm run package
+- npm test
+- npm run package
+deploy:
+  provider: releases
+  api_key:
+    secure: j9p+PlhMewEn90MlN6c2CKpY6wT7r7XAoBEsyRAkeBKXHnrJiqjS8PBLwL8fkEaQYPvTD+mETS1CsSY9t5ps0itcICdLcUayxzgebRULTsBp2eaiR+gF3nFhmAC1tYMo73FXxX9fMzos1wEgm9x54SEZI5jaQL8KOoE9/8LffgwgS/3serjUIl5K7A1cXGiQTM2rfZyiiopa60aJd662weaaYH4cvBzwLcsm9k4mEWzYH0CsRxwVDxt1e7NzegvadCOu5spCvreCW9yk8/WIb4sX4lOlAvnHb6xFD1GLwwG0g74SrMQIMwlXbHVX3Qjs+a0FlMMSjz8cyBxP12hGthLIE/C0csTjk1gtF396+l8CWN3XIToVHLYY5yIxxax06rMiHUHYnjaCpzavqU8UFyK3SgcGmFYLawxt+XGaDVBhPmaqyidCaygpvwVamch/V23zjJFVFsjZiUg5fREiUDHrfft70mFWbzi+UgewaUDd6JTegSZY0fGSmZy8BAQyYaK99ovBU832Nfa7WvvzK4qu70P3+yjSPhCac/WdWAYqGXnJasA8hu14CZ0blJ/VjC2CiKECPt/AEdKoPcxKBbZlkO40UHOaog+B7GIX8nZNcZs9W8nydIXlo5BXYIMirMb0nzr96+KkxrWOMCF/qzS5+bOvu8tp6tF646T9Juk=
+  file_glob: true
+  file: dist/*
+  skip_cleanup: true
+  on:
+    repo: ubsub/ubsub-client
+    tags: true
