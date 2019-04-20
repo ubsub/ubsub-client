@@ -13,6 +13,8 @@ events from the public internet to a local network.
 
 ## Installing CLI
 
+### With npm
+
 To use the `ubsub` CLI on your command line, make sure you have a recent version of [NodeJS](https://nodejs.org/en/) installed, and then run:
 
 ```bash
@@ -21,6 +23,12 @@ ubsub login
 ```
 
 Once installed, you can run `ubsub help` from command line to see help output.
+
+### Static build
+
+There are also static builds for mac, linux, and windows in the [releases](https://github.com/ubsub/ubsub-client/releases) section.
+
+## Commands
 
 ### Outputting events to the terminal
 
