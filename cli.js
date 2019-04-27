@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+const path = require('path');
 const yargs = require('yargs');
 const chalk = require('chalk');
 
@@ -38,6 +39,10 @@ const args = yargs
     eg. UBSUB_USER, UBSUB_USERKEY
 
     Add --help after any command to see more detail`);
+
+// When executed as a binary package (via pkg), we need to fix yarg's process name for help text
+if (process.pkg)
+  args.$0 = path.basename(process.argv0);
 
 try {
   args.parse();
