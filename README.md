@@ -4,10 +4,9 @@
 [![npm](https://img.shields.io/npm/v/ubsub.svg)](https://www.npmjs.com/package/ubsub)
 [![npm](https://img.shields.io/npm/l/ubsub.svg)](https://www.npmjs.com/package/ubsub)
 
-The ubsub-client is a nodejs module to easily connect to send and receive events from [UbSub](https://ubsub.io) using sockets and https.
+The ubsub-client is a nodejs module to easily connect to send and receive events from [UbSub](https://ubsub.io) using sockets and https via CLI.
 
-It also provides convenient wrappers to forward HTTP connections behind a NAT, to easily give you an endpoint to forward
-events from the public internet to a local network.
+**NOTICE:** This package is now ONLY the cli.  API and streaming functions have been broken out into [libubsub](https://github.com/ubsub/libubsub)
 
 # Using
 
@@ -94,46 +93,6 @@ Other useful commands include things like:
 For a full list of features, run: `ubsub --help`
 
 
-## Installing for App Use
-
-Installing into your project:
-
-```bash
-npm install --save ubsub
-```
-
-See [examples/](examples/) for some sample uses.
-
-### Listening to a Topic
-
-```js
-const ubsub = require('ubsub')(<user id>, <user secret>, [opts]);
-
-ubsub.listen(<topic id>, (event, rawSocketEvent ) => {
-	console.log('received event ' + JSON.stringify(event));
-});
-```
-
-### Forwarding a Topic to an HTTP endpoint
-
-```js
-const ubsub = require('ubsub')(<user id>, <user secret>, [opts]);
-
-ubsub.forward(<topic id>, 'http://localhost:5000', {..optional axios opts..});
-```
-
-### Sending an Event
-```js
-const ubsub = require('ubsub')(<user id>, <user secret>, [opts]);
-
-ubsub.send('topicId', 'key'/null, { payload: 123 }, [method = 'POST']);
-```
-
-## Options
-
-`reconnectOnError`: Whether or not to reconnect on a fatal error. This is separate from the default SocketIO reconnect. (default: true)
-
-`reconnectOnErrorDelay`: Number of milliseconds to delay the reconnect on error (default: 5000)
 
 # License
 

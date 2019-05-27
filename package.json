@@ -1,8 +1,7 @@
 {
   "name": "ubsub",
-  "version": "0.2.21",
+  "version": "1.0.0",
   "description": "Quickly and easily integrate with events on ubsub.io",
-  "main": "index.js",
   "bin": {
     "ubsub": "./cli.js"
   },
@@ -34,8 +33,8 @@
     "chalk": "^2.1.0",
     "columnify": "^1.5.4",
     "inquirer": "^3.3.0",
+    "libubsub": "^0.1.2",
     "lodash": "^4.17.11",
-    "socket.io-client": "^2.0.3",
     "yargs": "^10.0.3"
   },
   "devDependencies": {

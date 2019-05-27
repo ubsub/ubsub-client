@@ -1,6 +1,6 @@
 const inquirer = require('inquirer');
 const chalk = require('chalk');
-const Ubsub = require('../index');
+const Ubsub = require('libubsub').streaming;
 const authUtil = require('./authUtil');
 
 exports.command = 'login';

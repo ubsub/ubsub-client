@@ -2,7 +2,7 @@ const os = require('os');
 const fs = require('fs');
 const chalk = require('chalk');
 const _ = require('lodash');
-const Ubsub = require('../index');
+const Ubsub = require('libubsub').streaming;
 
 const CONFIG_PATH = `${os.homedir()}/.ubsub`;
 

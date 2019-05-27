@@ -32,6 +32,8 @@ exports.handler = function cmdForward(args) {
             },
           }).then(resp => {
             console.error(chalk.blue(`  Received ${resp.status}`));
+          }).catch(err => {
+            console.error(chalk.red(err.message));
           });
         });
     }).catch(catchError);

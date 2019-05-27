@@ -23,25 +23,25 @@ exports.handler = function cmdWebhook(args) {
   const api = assertGetClient(args).getApi();
   return api.createTopic(args.name || `Webhook${~~(Math.random() * 1000)}`, !args.keyless)
     .then(topic => {
-      const sock = cmdForward(_.assign({
+      cmdForward(_.assign({
         topic: topic.id,
-      }, args));
+      }, args)).then(sock => {
+        const url = `${api.routerUrl()}/event/${topic.id}${topic.key ? `?key=${topic.key}` : ''}`;
+        console.error(`${chalk.bold('Endpoint')}: ${chalk.underline(url)}`);
 
-      const url = `${api.routerUrl()}/event/${topic.id}${topic.key ? `?key=${topic.key}` : ''}`;
-      console.error(`${chalk.bold('Endpoint')}: ${chalk.underline(url)}`);
-
-      // Hook on to SIGINT for cleanup
-      process.on('SIGINT', () => {
-        sock.close();
-        if (!args.keep) {
-          console.error('Deleting topic...');
-          api.deleteTopic(topic.id)
-            .then(() => process.exit(0))
-            .catch(err => {
-              console.error(err.message);
-              process.exit(1);
-            });
-        } else process.exit(0);
+        // Hook on to SIGINT for cleanup
+        process.on('SIGINT', () => {
+          sock.close();
+          if (!args.keep) {
+            console.error('Deleting topic...');
+            api.deleteTopic(topic.id)
+              .then(() => process.exit(0))
+              .catch(err => {
+                console.error(err.message);
+                process.exit(1);
+              });
+          } else process.exit(0);
+        });
       });
     });
 };
